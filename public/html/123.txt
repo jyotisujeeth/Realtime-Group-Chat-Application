@@ -1,0 +1,18 @@
+
+    /** Join User in Room */
+    socket.on('userJoined', data => {
+        currentRoomId = data.room._id;
+        data.socketId = socket.id;
+        JOIN_ROOM(socket, data);
+    });
+
+    /** User Exit Room */
+    socket.on('exitRoom', data => {
+        currentRoomId = null;
+        socket.leave(data.room._id, async () => {
+            socket.to(data.room._id).emit(
+                'updateRoomData',
+                JSON.stringify({
+                    room: data.room
+                })
+            );
